@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Workflow, Zap, PlayCircle, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react';
+import { Workflow, PlayCircle, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SplitText from "./SplitText";
 import Masonry from './Masonry';

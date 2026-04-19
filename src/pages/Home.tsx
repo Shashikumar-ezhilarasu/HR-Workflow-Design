@@ -71,7 +71,7 @@ export function Home() {
   }, []);
 
   const handleAnimationComplete = () => {
-    console.log('Headline animation complete');
+    // Headline animation complete
   };
 
   return (

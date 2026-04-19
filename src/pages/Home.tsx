@@ -2,8 +2,8 @@ import { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Workflow, PlayCircle, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SplitText from "./SplitText";
-import Masonry from './Masonry';
+import SplitText from "../components/ui/SplitText";
+import Masonry from '../components/ui/Masonry';
 
 const masonryItems = [
   {

@@ -49,7 +49,7 @@ export function Designer() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className={`flex items-center gap-3 border-l pl-4 ${theme === 'dark' ? 'border-[#2a2a3c]' : 'border-gray-200'}`}>
-              <div className="p-1.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded shadow-sm">
+              <div className="p-1.5 bg-gradient-to-br from-primary-600 to-primary-400 rounded shadow-sm">
                 <Workflow className="w-4 h-4 text-white" />
               </div>
               <div className="flex items-center gap-2">

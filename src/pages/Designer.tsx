@@ -3,7 +3,7 @@ import { NodePalette } from '../components/sidebar/NodePalette';
 import { WorkflowCanvas } from '../components/canvas/WorkflowCanvas';
 import { NodeFormPanel } from '../components/forms/NodeFormPanel';
 import { SandboxPanel } from '../components/sandbox/SandboxPanel';
-import { Workflow, Undo2, Redo2, LayoutDashboard, Share2, Save, ArrowLeft, Sun, Moon, PanelRight } from 'lucide-react';
+import { Workflow, Undo2, Redo2, LayoutDashboard, Save, ArrowLeft, Sun, Moon, PanelRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWorkflowStore } from '@/store/workflowStore';
 import { getLayoutedElements } from '@/utils/layout';
@@ -78,10 +78,6 @@ export function Designer() {
     }
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Workflow link copied to clipboard!');
-  };
 
   return (
     <div className={`h-screen w-full flex font-sans overflow-hidden ${theme === 'dark' ? 'bg-[#13131a]' : 'bg-gray-100'}`}>

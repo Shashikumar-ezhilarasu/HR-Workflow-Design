@@ -1,4 +1,4 @@
-# HR Workflow Designer
+# Tredence Studio - AI Agentic Engineering
 
 A production-ready, full-stack HR workflow designer built with React, TypeScript, and React Flow. This application allows HR admins to visually design, configure, and test internal workflows such as onboarding, leave approval, and document verification.
 

@@ -52,10 +52,10 @@ export function LeftSidebar() {
   return (
     <div className="w-64 bg-white dark:bg-[#1e1e2d] text-gray-700 dark:text-gray-300 h-full flex flex-col border-r border-gray-200 dark:border-[#2a2a3c] transition-colors duration-200 shrink-0">
       <div className="p-5 flex items-center gap-3 border-b border-gray-200 dark:border-[#2a2a3c]">
-        <div className="w-8 h-8 rounded bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg">
-          C
+        <div className="w-8 h-8 rounded bg-gradient-to-tr from-primary-600 to-primary-400 flex items-center justify-center font-bold text-white shadow-lg">
+          T
         </div>
-        <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-wide">CodeAuto</h2>
+        <h2 className="text-xl font-extrabold text-gray-900 dark:text-white tracking-wide">Tredence Studio</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">

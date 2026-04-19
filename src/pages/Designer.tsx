@@ -11,7 +11,8 @@ import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { RightSidebar } from '../components/layout/RightSidebar';
 import { downloadWorkflowJSON, importWorkflowFromJSON } from '@/utils/serializer';
 import { useRef } from 'react';
-import { WorkflowNode, Edge } from 'reactflow';
+import { Edge } from 'reactflow';
+import { WorkflowNode } from '@/types/workflow';
 import { sampleWorkflow } from '@/api/mockData';
 
 export function Designer() {

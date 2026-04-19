@@ -35,3 +35,16 @@ export function downloadWorkflowJSON(
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+export function importWorkflowFromJSON(jsonString: string): WorkflowGraph {
+  try {
+    const data = JSON.parse(jsonString) as WorkflowGraph;
+    if (!data.nodes || !data.edges) {
+      throw new Error('Invalid workflow file: missing nodes or edges');
+    }
+    return data;
+  } catch (error) {
+    console.error('Failed to parse workflow JSON:', error);
+    throw new Error('Invalid workflow file: corrupted JSON');
+  }
+}

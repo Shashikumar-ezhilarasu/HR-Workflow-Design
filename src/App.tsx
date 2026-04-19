@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Designer } from './pages/Designer';
+import { Documentation } from './pages/Documentation';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/documentation" element={<Documentation />} />
         
         {/* Main Application Routes */}
         <Route path="/designer" element={<Designer />} />

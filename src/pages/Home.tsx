@@ -125,13 +125,23 @@ export function Home() {
           
           <nav className="flex items-center gap-1 sm:gap-2">
             {['Product', 'Solutions', 'Documentation', 'Pricing'].map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
-                className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
-              >
-                {item}
-              </a>
+              item === 'Documentation' ? (
+                <Link 
+                  key={item} 
+                  to="/documentation" 
+                  className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                >
+                  {item}
+                </Link>
+              ) : (
+                <a 
+                  key={item} 
+                  href={`#${item.toLowerCase().replace(' ', '-')}`} 
+                  className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                >
+                  {item}
+                </a>
+              )
             ))}
           </nav>
 
@@ -346,6 +356,11 @@ export function Home() {
                       <p className="text-primary-500 text-sm font-bold uppercase mb-2">Stack</p>
                       <p className="text-xl font-bold">React + TS + Flow</p>
                     </div>
+                  </div>
+                  <div className="pt-6 border-t border-white/10 mt-8">
+                    <Link to="/documentation" className="inline-flex items-center gap-2 text-primary-400 font-bold hover:text-primary-300 transition-colors group/btn">
+                      View Full Documentation <ArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
+                    </Link>
                   </div>
                 </div>
               </div>

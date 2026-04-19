@@ -9,6 +9,10 @@ import { useWorkflowStore } from '@/store/workflowStore';
 import { getLayoutedElements } from '@/utils/layout';
 import { LeftSidebar } from '../components/layout/LeftSidebar';
 import { RightSidebar } from '../components/layout/RightSidebar';
+import { downloadWorkflowJSON, importWorkflowFromJSON } from '@/utils/serializer';
+import { useRef } from 'react';
+import { WorkflowNode, Edge } from 'reactflow';
+import { sampleWorkflow } from '@/api/mockData';
 
 export function Designer() {
   const undo = useWorkflowStore(state => state.undo);
@@ -24,9 +28,54 @@ export function Designer() {
   const isRightSidebarOpen = useWorkflowStore(state => state.isRightSidebarOpen);
   const toggleRightSidebar = useWorkflowStore(state => state.toggleRightSidebar);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const setNodes = useWorkflowStore(state => state.setNodes);
+  const setEdges = useWorkflowStore(state => state.setEdges);
+  const resetWorkflow = useWorkflowStore(state => state.resetWorkflow);
+
   const handleAutoLayout = () => {
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(nodes, edges);
     applyAutoLayout(layoutedNodes, layoutedEdges);
+  };
+
+  const handleExport = () => {
+    downloadWorkflowJSON(nodes, edges, 'hr-workflow-export.json');
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      try {
+        const { nodes, edges } = importWorkflowFromJSON(content);
+        setNodes(nodes);
+        setEdges(edges);
+      } catch (err) {
+        alert('Failed to import workflow. Please check the file format.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = ''; // Reset input
+  };
+
+  const handleReset = () => {
+    if (confirm('Clear entire workflow canvas? This action cannot be undone.')) {
+      resetWorkflow();
+    }
+  };
+
+  const loadSample = () => {
+    if (confirm('Load sample onboarding workflow? This will replace your current work.')) {
+      setNodes(sampleWorkflow.nodes as WorkflowNode[]);
+      setEdges(sampleWorkflow.edges as Edge[]);
+    }
   };
 
   const handleShare = () => {
@@ -108,14 +157,46 @@ export function Designer() {
               </button>
             </div>
 
+            <div className={`flex items-center rounded-lg border p-0.5 ${theme === 'dark' ? 'bg-[#2a2a3c] border-[#3f3f5a]' : 'bg-gray-50 border-gray-200'}`}>
+              <button 
+                onClick={handleExport}
+                className={`p-1.5 rounded shadow-sm transition-all flex items-center gap-1 px-3 ${theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-[#3f3f5a]' : 'text-gray-600 hover:text-primary-600 hover:bg-white'}`}
+                title="Export JSON"
+              >
+                <Save className="w-4 h-4" />
+                <span className="text-xs font-semibold">Export</span>
+              </button>
+              <button 
+                onClick={handleImportClick}
+                className={`p-1.5 rounded shadow-sm transition-all flex items-center gap-1 px-3 ${theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-[#3f3f5a]' : 'text-gray-600 hover:text-primary-600 hover:bg-white'}`}
+                title="Import JSON"
+              >
+                <div className="rotate-180"><Save className="w-4 h-4" /></div>
+                <span className="text-xs font-semibold">Import</span>
+              </button>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                className="hidden" 
+                accept=".json"
+              />
+            </div>
+
             <button 
-              onClick={handleShare}
+              onClick={loadSample}
               className={`px-4 py-1.5 text-xs font-semibold border rounded-lg shadow-sm transition-all flex items-center gap-2 ${theme === 'dark' ? 'bg-[#2a2a3c] text-white border-[#3f3f5a] hover:bg-[#3f3f5a]' : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'}`}
             >
-              <Share2 className="w-3.5 h-3.5" /> Share
+              <LayoutDashboard className="w-3.5 h-3.5" /> Sample
+            </button>
+            <button 
+              onClick={handleReset}
+              className="px-4 py-1.5 bg-red-600/10 text-red-600 dark:text-red-400 text-xs font-semibold rounded-lg shadow-sm hover:bg-red-600/20 transition-all flex items-center gap-2 border border-red-600/20"
+            >
+              Reset
             </button>
             <button className="px-4 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-blue-700 transition-all flex items-center gap-2 border border-blue-500">
-              <Save className="w-3.5 h-3.5" /> Save Flow
+              Publish
             </button>
           </div>
         </header>

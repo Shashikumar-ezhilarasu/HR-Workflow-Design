@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PlayCircle, X, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { PlayCircle, X, CheckCircle, XCircle, AlertCircle, ShieldCheck, Zap } from 'lucide-react';
 import { useWorkflowStore } from '@/store/workflowStore';
 import { useSimulate } from '@/hooks/useSimulate';
 import { serializeWorkflow, downloadWorkflowJSON } from '@/utils/serializer';
@@ -139,37 +139,64 @@ export function SandboxPanel() {
                   )}
 
                   {result.steps.length > 0 && (
-                    <div className="space-y-2">
-                      <h3 className="font-medium text-gray-900">Execution Steps</h3>
-                      <div className="space-y-2">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-bold text-gray-900 px-1">Execution Timeline</h3>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 bg-gray-100 px-2 py-1 rounded">Real-time Log</span>
+                      </div>
+                      
+                      <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-200 before:via-gray-100 before:to-transparent">
                         {result.steps.map((step, idx) => (
-                          <div
-                            key={idx}
-                            className="p-3 bg-white border border-gray-200 rounded-lg"
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center text-xs font-medium text-primary-700">
-                                {idx + 1}
+                          <div key={idx} className="relative flex items-start group">
+                            {/* Timeline Icon Container */}
+                            <div className="flex flex-col items-center mr-4">
+                              <div className={`relative z-10 flex items-center justify-center w-10 h-10 rounded-2xl shadow-sm border-2 ${
+                                step.status === 'completed' ? 'bg-white border-primary-500 text-primary-600' : 'bg-red-50 border-red-500 text-red-600'
+                              } transition-transform group-hover:scale-110`}>
+                                {step.type === 'start' && <PlayCircle className="w-5 h-5" />}
+                                {step.type === 'task' && <AlertCircle className="w-5 h-5" />}
+                                {step.type === 'approval' && <ShieldCheck className="w-5 h-5" />}
+                                {step.type === 'automated' && <Zap className="w-5 h-5" />}
+                                {step.type === 'end' && <CheckCircle className="w-5 h-5" />}
                               </div>
-                              <div className="flex-1">
-                                <div className="font-medium text-gray-900">
-                                  {step.nodeName}
+                            </div>
+                            
+                            {/* Message Content */}
+                            <div className="flex-1 min-w-0 bg-gray-50/50 rounded-2xl p-5 border border-transparent hover:border-gray-200 hover:bg-white hover:shadow-xl transition-all duration-300">
+                              <div className="flex items-center justify-between gap-4 mb-2">
+                                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                                  step.type === 'start' ? 'bg-blue-100 text-blue-700' :
+                                  step.type === 'task' ? 'bg-orange-100 text-orange-700' :
+                                  step.type === 'approval' ? 'bg-purple-100 text-purple-700' :
+                                  step.type === 'automated' ? 'bg-emerald-100 text-emerald-700' :
+                                  'bg-gray-200 text-gray-700'
+                                }`}>
+                                  {step.type}
+                                </span>
+                                <time className="text-[10px] font-bold text-gray-400 whitespace-nowrap">
+                                  {new Date(step.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                </time>
+                              </div>
+                              
+                              <h4 className="text-sm font-black text-gray-900 group-hover:text-primary-600 transition-colors">
+                                {step.nodeName}
+                              </h4>
+                              
+                              <p className="text-xs text-gray-500 mt-2 italic leading-relaxed">
+                                {step.message}
+                              </p>
+
+                              {/* Detailed Metadata Grid */}
+                              {step.details && Object.keys(step.details).length > 0 && (
+                                <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-x-6 gap-y-2">
+                                  {Object.entries(step.details).map(([key, value]) => (
+                                    <div key={key} className="flex flex-col">
+                                      <span className="text-[9px] font-black uppercase text-gray-400 tracking-wider font-mono">{key}</span>
+                                      <span className="text-[11px] font-bold text-gray-800 truncate">{value || 'N/A'}</span>
+                                    </div>
+                                  ))}
                                 </div>
-                                <div className="text-sm text-gray-600 mt-1">
-                                  {step.message}
-                                </div>
-                              </div>
-                              <div
-                                className={`text-xs font-medium px-2 py-1 rounded ${
-                                  step.status === 'completed'
-                                    ? 'bg-green-100 text-green-700'
-                                    : step.status === 'failed'
-                                    ? 'bg-red-100 text-red-700'
-                                    : 'bg-gray-100 text-gray-700'
-                                }`}
-                              >
-                                {step.status}
-                              </div>
+                              )}
                             </div>
                           </div>
                         ))}

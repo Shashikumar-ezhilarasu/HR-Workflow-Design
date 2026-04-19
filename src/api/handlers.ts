@@ -60,14 +60,27 @@ export const handlers = [
         const currentNode = nodes.find((n) => n.id === currentId);
         if (!currentNode) continue;
 
-        const stepMessage = getStepMessage(currentNode.data.type, currentNode.data.label);
+        const details: Record<string, string> = {};
+        if (currentNode.data.type === 'task') {
+          details['Assignee'] = currentNode.data.assignee;
+          details['Due Date'] = currentNode.data.dueDate;
+        } else if (currentNode.data.type === 'approval') {
+          details['Approver Role'] = currentNode.data.approverRole;
+          details['Auto-Threshold'] = `${currentNode.data.autoApproveThreshold}%`;
+        } else if (currentNode.data.type === 'automated') {
+          details['Action'] = currentNode.data.actionId;
+        } else if (currentNode.data.type === 'end') {
+          details['Message'] = currentNode.data.endMessage;
+        }
 
         steps.push({
           nodeId: currentNode.id,
           nodeName: currentNode.data.label,
+          type: currentNode.data.type,
           status: 'completed',
-          message: stepMessage,
+          message: getStepMessage(currentNode.data.type, currentNode.data.label),
           timestamp: new Date().toISOString(),
+          details,
         });
 
         // Add next nodes to queue
@@ -93,16 +106,16 @@ export const handlers = [
 function getStepMessage(type: string, label: string): string {
   switch (type) {
     case 'start':
-      return `Workflow initiated: ${label}`;
+      return `[System] Workflow initialized with high-priority status: ${label}`;
     case 'task':
-      return `Task assigned: ${label}`;
+      return `[Action] Assigned human task with documentation requirement: ${label}`;
     case 'approval':
-      return `Approval requested: ${label}`;
+      return `[Review] Routed to stakeholders for cross-departmental approval: ${label}`;
     case 'automated':
-      return `Automated action executed: ${label}`;
+      return `[Engine] Executed automated logic via Tredence AI Bridge: ${label}`;
     case 'end':
-      return `Workflow completed: ${label}`;
+      return `[Complete] Workflow lifecycle concluded successfully: ${label}`;
     default:
-      return `Step executed: ${label}`;
+      return `[Step] Successfully executed: ${label}`;
   }
 }

@@ -70,9 +70,11 @@ export interface AutomationAction {
 export interface SimulationStep {
   nodeId: string;
   nodeName: string;
+  type: NodeType;
   status: 'pending' | 'completed' | 'failed';
   message: string;
   timestamp: string;
+  details?: Record<string, string>;
 }
 
 // Simulation result

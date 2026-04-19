@@ -100,5 +100,6 @@ If this project were to move into a full production environment:
 
 ---
 
-**Built by Shashikumarezhil**  
+**Built by Shashikumar Ezhilarasu**  
+for
 *AI Agentic Engineering - Tredence Studio*

@@ -1,5 +1,8 @@
 # HR Workflow Designer - Production Prototype
 
+<img width="1582" height="959" alt="Screenshot 2026-04-19 at 1 28 28 PM" src="https://github.com/user-attachments/assets/0633f5b8-f3ab-48b0-92b3-ab15b456c941" />
+
+
 A sophisticated, production-grade HR Workflow Designer module built as a technical showcase. This platform enables HR administrators to visually architect, configure, and simulate complex internal workflows such as onboarding, leave approvals, and automated document verification.
 
 - **Objective**: Demonstrate expertise in React, React Flow, and modular frontend architecture.

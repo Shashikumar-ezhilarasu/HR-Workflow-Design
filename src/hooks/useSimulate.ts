@@ -21,7 +21,8 @@ export function useSimulate() {
       });
 
       if (!response.ok) {
-        throw new Error('Simulation failed');
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.errors?.[0] || `Simulation failed with status ${response.status}`);
       }
 
       const data: SimulationResult = await response.json();

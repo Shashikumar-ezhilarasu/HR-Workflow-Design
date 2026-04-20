@@ -23,11 +23,12 @@ export const handlers = [
   //  POST /api/simulate
   // ─────────────────────────────────────────────
   http.post('/api/simulate', async ({ request }) => {
-    const startTime = performance.now();
-    await delay(400); // Simulate brief network latency
+    const startTime = Date.now();
+    try {
+      await delay(400); // Simulate brief network latency
 
-    const body = (await request.json()) as WorkflowGraph;
-    const { nodes, edges } = body;
+      const body = (await request.json().catch(() => ({}))) as WorkflowGraph;
+      const { nodes = [], edges = [] } = body;
 
     const errors: string[]    = [];
     const steps: SimulationStep[] = [];
@@ -168,12 +169,21 @@ export const handlers = [
       success:         errors.length === 0,
       steps,
       errors,
-      durationMs:      Math.round(performance.now() - startTime),
+      durationMs:      Math.round(Date.now() - startTime),
       executionPath,
       branchDecisions,
     };
 
     return HttpResponse.json(result);
+    } catch (err) {
+      console.error('Simulation Error:', err);
+      return HttpResponse.json({
+        success: false,
+        steps: [],
+        errors: [err instanceof Error ? err.message : 'Internal Simulation Engine Error'],
+        durationMs: Math.round(Date.now() - startTime),
+      }, { status: 500 });
+    }
   }),
 ];
 
@@ -370,7 +380,7 @@ function buildFailResult(errors: string[], startMs: number): SimulationResult {
     success:      false,
     steps:        [],
     errors,
-    durationMs:   Math.round(performance.now() - startMs),
+    durationMs:   Math.round(Date.now() - startMs),
     executionPath: [],
     branchDecisions: [],
   };

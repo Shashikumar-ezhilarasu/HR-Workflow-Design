@@ -71,10 +71,23 @@ export interface SimulationStep {
   nodeId: string;
   nodeName: string;
   type: NodeType;
-  status: 'pending' | 'completed' | 'failed';
+  status: 'pending' | 'completed' | 'failed' | 'skipped';
   message: string;
   timestamp: string;
+  /** Step-level execution duration in ms */
+  durationMs?: number;
+  /** Zero-based order in execution */
+  stepIndex: number;
   details?: Record<string, string>;
+}
+
+/** A branch decision taken during execution (e.g. approval path) */
+export interface BranchDecision {
+  nodeId: string;
+  nodeName: string;
+  chosenTargetId: string;
+  chosenTargetName: string;
+  reason: string;
 }
 
 // Simulation result
@@ -82,6 +95,12 @@ export interface SimulationResult {
   success: boolean;
   steps: SimulationStep[];
   errors: string[];
+  /** Total wall-clock duration in ms */
+  durationMs?: number;
+  /** Ordered list of node IDs in the critical path */
+  executionPath?: string[];
+  /** Branching decisions made during execution */
+  branchDecisions?: BranchDecision[];
 }
 
 // Validation error
